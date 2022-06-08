@@ -31,7 +31,7 @@ function MyStack() {
           options={{ title: 'Lista de créditos' }}
       />
       <Stack.Screen
-          name="Detalles del crédito"
+          name="CreditDetail_Screen"
           component={CreditDetail_Screen}
           options={{ title: 'Detalles del crédito' }}
       />

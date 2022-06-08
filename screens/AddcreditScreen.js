@@ -29,30 +29,7 @@ class AddcreditScreen extends Component {
     this.setState(state);
   };
 
-  // calcular = () =>{
-  //   let  interes
-  //   let caso= this.state.tipoPrestamo
-
-  //   switch(caso){
-  //     case 'vivienda':
-  //       interes=1/100
-  //     break;
-  //   case' educacion':
-  //      interes=0.5/100
-  //     break;
-  //   case 'libreInversion':
-  //       interes=1.5/100
-  //     break;
-  //   }
-   
-  //   console.log(caso)
-  //   //calcular deuda 
-
-  //   let montoDeuda = (((this.state.valorPrestamo)*interes*(this.state.numeroCuotas))+(this.state.valorPrestamo))
-  //   console.log(montoDeuda)
-  //   // this.setState({valorDeuda:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda))});
-  //   // this.setState({valorCuota:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda/parseFloat(this.numeroCuotas)))})
-  // } 
+  
   limpiar(){
     this.setState({email:''});
     this.setState({valorPrestamo:''});
@@ -170,10 +147,7 @@ render() {
           </View>
           <View style={styles.textInput}>
             <RNPickerSelect
-              // placeholder={{
-              //   label: "Seleccione tipo de prestamo",
-              //   value: "",
-              // }}
+              
               onValueChange={(val) =>
                 this.inputValueUpdate(val, "tipoPrestamo")
               }
@@ -191,10 +165,7 @@ render() {
           </View>
           <View style={styles.textInput}>
             <RNPickerSelect
-              //   placeholder={{
-              //   label: "Seleccione coutas del prestamo",
-              //   value: "",
-              // }}
+              
               onValueChange={(val) =>this.inputValueUpdate(val, "numeroCuotas")}
               items={[
                 {
