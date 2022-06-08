@@ -1,0 +1,25 @@
+  const calcular = () =>{
+    let  interes
+    switch(tipoPrestamo){
+      case 'vivienda':
+        interes=1/100
+      break;
+    case' educacion':
+       interes=0.5/100
+      break;
+    case 'vehiculo':
+        interes=1.5/100
+      break;
+    }
+    let cmanejo=0
+    if (cuotaManejo){
+      cmanejo=10000
+    }
+    //calcular deuda 
+
+    let montoDeuda =(parseFloat(valorPrestamo))*interes*parseFloat(numeroCuotas)+parseFloat(valorPrestamo)
+   
+    setValorDeuda(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda));
+    setValorCuota(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda/parseFloat(numeroCuotas)+cmanejo))
+
+  } 
