@@ -29,102 +29,110 @@ class AddcreditScreen extends Component {
     this.setState(state);
   };
 
-  calcular = () =>{
-    let  interes
-    let caso= this.state.tipoPrestamo
+  // calcular = () =>{
+  //   let  interes
+  //   let caso= this.state.tipoPrestamo
 
-    switch(caso){
-      case 'vivienda':
-        interes=1/100
-      break;
-    case' educacion':
-       interes=0.5/100
-      break;
-    case 'vehiculo':
-        interes=1.5/100
-      break;
-    }
+  //   switch(caso){
+  //     case 'vivienda':
+  //       interes=1/100
+  //     break;
+  //   case' educacion':
+  //      interes=0.5/100
+  //     break;
+  //   case 'libreInversion':
+  //       interes=1.5/100
+  //     break;
+  //   }
    
-    console.log(caso)
-    //calcular deuda 
+  //   console.log(caso)
+  //   //calcular deuda 
 
-    let montoDeuda = (((this.state.valorPrestamo)*interes*(this.state.numeroCuotas))+(this.state.valorPrestamo))
-    console.log(montoDeuda)
-    // this.setState({valorDeuda:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda))});
-    // this.setState({valorCuota:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda/parseFloat(this.numeroCuotas)))})
-  } 
+  //   let montoDeuda = (((this.state.valorPrestamo)*interes*(this.state.numeroCuotas))+(this.state.valorPrestamo))
+  //   console.log(montoDeuda)
+  //   // this.setState({valorDeuda:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda))});
+  //   // this.setState({valorCuota:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda/parseFloat(this.numeroCuotas)))})
+  // } 
+  limpiar(){
+    this.setState({email:''});
+    this.setState({valorPrestamo:''});
+    this.setState({tipoPrestamo:''});
+    this.setState({numeroCuotas:''});
+    this.setState({valorCuota:''});
+    this.setState({valorDeuda:''});
+    }
 
 
   storeUser(){
 
     if(this.state.email === '' || this.state.valorPrestamo ===''|| this.state.tipoPrestamo ===''|| this.state.numeroCuotas ===''){
       alert('Ingresar todos los datos')
-     } 
-    else {
+     } else if(this.state.valorPrestamo >= 1000000 && this.state.valorPrestamo <= 1000000000){
+      firestore.getDocs(firestore.collection(db, "creditos"))
+      .then((docs) => {
+          docs.forEach((res) => {
+          if (res.data().email === this.state.email) {
+              this.setState({sw:true})          
+          }
+          });
+          if(this.state.sw){
+          alert('Correo en uso por favor utilice otro correo')
+          this.setState({sw:false})
+          }
+          else {
+          this.setState({isLoading: true})
+          try {
+            let  interes
+      switch(this.state.tipoPrestamo){
+        case 'vivienda':
+          interes=1/100
+        break;
+      case' educacion':
+         interes=0.5/100
+        break;
+      case 'vehiculo':
+          interes=1.5/100
+        break;
+      }
+     
+      //calcular deuda 
+  
+      let montoDeuda =(parseFloat(this.state.valorPrestamo))*interes*parseFloat(this.state.numeroCuotas)+parseFloat(this.state.valorPrestamo)
+     
+      let valorDeuda=new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda);
+      let valorCuota=new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda/parseFloat(this.state.numeroCuotas))
 
-        // let  interes
-        // switch(this.tipoPrestamo){
-        //   case 'vivienda':
-        //     interes=1/100
-        //   break;
-        // case' educacion':
-        //    interes=0.5/100
-        //   break;
-        // case 'vehiculo':
-        //     interes=1.5/100
-        //   break;
-        // }
-       
-        // //calcular deuda 
-    
-        // let montoDeuda =(parseFloat(this.valorPrestamo))*interes*parseFloat(this.numeroCuotas)+parseFloat(this.valorPrestamo)
-       
-        // this.setState({valorDeuda:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda))});
-        // this.setState({valorCuota:(new Intl.NumberFormat('es-CO', { maximumSignificantDigits: 3 }).format(montoDeuda/parseFloat(this.numeroCuotas)))})
-        
+              this.setState({isLoading: false})
+              const docRef = addDoc(collection(db, "creditos"), {
+              
+              email: this.state.email,
+              valorPrestamo: this.state.valorPrestamo,
+              tipoPrestamo: this.state.tipoPrestamo,
+              numeroCuotas:this.state.numeroCuotas,
+              valorCuota:valorCuota,
+              valorDeuda:valorDeuda,
 
-
-
+              isLoading: true,
+              });
+             alert("Crédito agregado correctamente ...");
+              
+                this.setState({email:this.state.email});
+                this.setState({valorPrestamo:this.state.valorPrestamo});
+                this.setState({tipoPrestamo:this.state.tipoPrestamo});
+                this.setState({numeroCuotas:this.state.numeroCuotas});
+                this.setState({valorCuota:valorCuota});
+                this.setState({valorDeuda:valorDeuda});
+              
             
-        firestore.getDocs(firestore.collection(db, "creditos"))
-        .then((docs) => {
-            docs.forEach((res) => {
-            if (res.data().email === this.state.email) {
-                this.setState({sw:true})          
-            }
-            });
-            if(this.state.sw){
-            alert('Correo en uso por favor utilice otro correo')
-            this.setState({sw:false})
-            }
-            else {
-            this.setState({isLoading: true})
-            try {
-                this.setState({isLoading: false})
-                const docRef = addDoc(collection(db, "creditos"), {
-                
-                email: this.state.email,
-                valorPrestamo: this.state.valorPrestamo,
-                tipoPrestamo: this.state.tipoPrestamo,
-                numeroCuotas:this.state.numeroCuotas,
-                valorCuota:this.state.valorCuota,
-                valorDeuda:this.state.valorDeuda,
-                isLoading: true,
-                });
-                alert("Usuario agregado correctamente ...");
-                
-                this.setState({email:''});
-                this.setState({valorPrestamo:''});
-                this.setState({tipoPrestamo:''});
-                this.setState({numeroCuotas:''});
-                this.setState({valorCuota:''});
-                this.setState({valorDeuda:''});
-                this.props.navigation.navigate('CreditListScreen')
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-            }
-        });
+          } catch (e) {
+              console.error("Error adding document: ", e);
+          }
+          }
+      });
+     }
+    else {   
+      alert('El prestamo debe estar entre 1.000.000 y 100.000.000')         
+        
     }
 }
 
@@ -162,45 +170,60 @@ render() {
           </View>
           <View style={styles.textInput}>
             <RNPickerSelect
-              placeholder={{
-                label: "Seleccione tipo de prestamo",
-                value: "",
-              }}
+              // placeholder={{
+              //   label: "Seleccione tipo de prestamo",
+              //   value: "",
+              // }}
               onValueChange={(val) =>
                 this.inputValueUpdate(val, "tipoPrestamo")
               }
               items={[
+                {
+                  label: "Seleccione tipo de prestamo",
+                  value: "",
+                },
                 { label: "Vivienda", value: "vivienda" },
                 { label: "Educación", value: "educacion" },
-                { label: "Vehiculo", value: "vehiculo" },
+                { label: "Libre inversión", value: "libreInversion" },
               ]}
-              value={this.tipoPrestamo}
+              value={this.state.tipoPrestamo}
             />
           </View>
           <View style={styles.textInput}>
             <RNPickerSelect
-                placeholder={{
-                label: "Seleccione coutas del prestamo",
-                value: "",
-              }}
+              //   placeholder={{
+              //   label: "Seleccione coutas del prestamo",
+              //   value: "",
+              // }}
               onValueChange={(val) =>this.inputValueUpdate(val, "numeroCuotas")}
               items={[
+                {
+                  label: "Seleccione coutas del prestamo",
+                  value: "",
+                },
                 { label: "12", value: "12" },
                 { label: "24", value: "24" },
                 { label: "36", value: "36" },
               ]}
-              value={this.numeroCuotas}
+              value={this.state.numeroCuotas}
             />
           </View>
 
             
-            <TextInput style={styles.textInput} 
-            value={this.valorCuota} 
-            onChangeText={(val) => this.inputValueUpdate(val, "valorCuota")
+            <TextInput 
+            style={styles.textInput} 
+            disabled={true}
+            value={this.state.valorCuota} 
+            onChangeText={(val) => this.state.inputValueUpdate(val, "valorCuota")
             }
             />
 
-            <TextInput style={styles.textInput} value={this.valorDeuda} />
+            <TextInput 
+              style={styles.textInput}
+              disabled={true}
+              value={this.state.valorDeuda}
+              onChangeText={(val) => this.state.inputValueUpdate(val, "valorDeuda")}
+              />
 
           <View style={styles.button}>
             <Button
@@ -211,8 +234,8 @@ render() {
           </View>
           <View style={styles.button}>
             <Button
-              title="Calcular crédito"
-              onPress={() => this.calcular()}
+              title="Limpiar Campos"
+              onPress={() => this.limpiar()}
               color="#19AC52"
             />
           </View>

@@ -9,7 +9,7 @@ class CreditListScreen extends Component {
     super();
     this.state = {
       isLoading: true,
-      userArr: []
+      creditArr: []
     };
 
   }
